@@ -1,49 +1,74 @@
 // eslint-disable-next-line no-unused-vars
 const hapi = require('@hapi/hapi');
 const joi = require('@hapi/joi');
-const dataUser = require('./data');
+const users = require('./data');
 
 // Part 1 : untuk registrasi buat nanti.
-
-
-// Part 2 : Login
-
-const blueprint = joi.object({
-  usernameOrEmail: joi.string().required(),
+const nameuser = joi.object({
+  username: joi.string().min(3).required(),
 });
+
+const emailUser = joi.object({
+  email: joi.string().email().required(),
+});
+
 const userPassword = joi.object({
   password: joi.string().min(8).required(),
 });
+const register = (request, h) => {
+  const {username, email, password} = request.payload;
 
-const login = (request, h) => {
-  const {usernameOrEmail, password} = request.payload;
-  const usernameOrEmailValidation = blueprint.validate({usernameOrEmail});
+  const usernameValidation = nameuser.validate({username});
+  const emailValidation = emailUser.validate({email});
   const passwordValidation = userPassword.validate({password});
 
-  if (!usernameOrEmailValidation.error && !passwordValidation.error) {
-    const user = dataUser.find((user) => (
-      user.username === usernameOrEmail||user.email === usernameOrEmail
+  // eslint-disable-next-line max-len
+  if (!usernameValidation.error && !emailValidation.error && !passwordValidation.error) {
+    // Validasi data pengguna (tambahkan validasi sesuai kebutuhan)
+    const user = {username, email, password};
+    users.push(user);
+    return {message: 'Pendaftaran berhasil!'};
+  } else {
+    // eslint-disable-next-line max-len
+    return h.response({error: 'Username, email, dan password diperlukan!'}).code(400);
+  }
+};
+// Part 2 : Login
+const blueprint = joi.object({
+  email: joi.string().email().required(),
+});
+
+const login = (request, h) => {
+  const {email, password} = request.payload;
+  const EmailValidation = blueprint.validate({email});
+  const passwordValidation = userPassword.validate({password});
+
+  if (!EmailValidation.error && !passwordValidation.error) {
+    const user = users.find((user) => (
+      user.email === email
     ) && user.password === password);
 
     if (user) {
       const response = h.response({
         status: 'success',
         message: 'Accomplish',
-        data: user.email,
+        data: user,
       });
       response.code(200);
       return response;
     }
-  } else {
-    const response = h.response({
-      status: 'fail',
-      message: 'invalid',
-    });
-    response.code(400);
-    return response;
   }
+  const response = h.response({
+    status: 'fail',
+    message: 'Invalid',
+  });
+  response.code(400);
+  return response;
 };
-module.exports = {login};
+module.exports = {login, register};
+
+
+/* Coba coba ini hehe don't matter*/
 
 //         const username_req = joi.object ({
 //         username: joi.string().min(2).max(14).required()
