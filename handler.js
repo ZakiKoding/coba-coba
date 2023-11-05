@@ -8,7 +8,7 @@ const dataUser = require('./data');
 
 // Part 2 : Login
 
-const blueprint = Joi.object({
+const blueprint = joi.object({
   usernameOrEmail: joi.string().required(),
 });
 const userPassword = joi.object({
@@ -92,4 +92,3 @@ module.exports = {login};
 //         return response;
 
 //     }
-module.exports = {login};
