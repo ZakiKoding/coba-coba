@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 // eslint-disable-next-line no-unused-vars
 const hapi = require('@hapi/hapi');
 const joi = require('@hapi/joi');
@@ -52,7 +53,11 @@ const login = (request, h) => {
       const response = h.response({
         status: 'success',
         message: 'Accomplish',
-        data: user,
+        data: users.map((user) => ({
+          username: user.username,
+          email: user.email,
+        }
+        )),
       });
       response.code(200);
       return response;

@@ -1,5 +1,4 @@
-// eslint-disable-next-line no-unused-vars
-const hapi = require('@hapi/hapi');
+/* eslint-disable linebreak-style */
 const {login, register} = require('./handler');
 const users = require('./data');
 const routes = [
@@ -24,12 +23,12 @@ const routes = [
 //  {
 //     method: 'GET',
 //     path: '/login',
-//     handler: 
+//     handler:
 //  },
 //  {
 //     method: 'PUT',
 //     path: '/login',
-//     handler: 
+//     handler:
 //  },
 
 module.exports = routes;
